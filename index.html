@@ -15,7 +15,7 @@
             margin-bottom: 20px;
         }
         button {
-            display: none; /* Hide buttons */
+            display: none; /* Hide buttons, only needed for control from Genially */
         }
     </style>
 </head>
@@ -61,10 +61,10 @@
             document.getElementById('display').textContent = '00:00:00';
         }
 
-        // Check if there's existing elapsed time in localStorage
+        // Load the elapsed time from localStorage
         elapsedTime = parseInt(localStorage.getItem('elapsedTime'), 10) || 0;
 
-        // Start the stopwatch
+        // Start the stopwatch automatically
         startStopwatch();
 
         // Listen for messages to control the stopwatch
@@ -78,6 +78,7 @@
     </script>
 </body>
 </html>
+
 
 
 
