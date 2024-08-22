@@ -1,10 +1,9 @@
-// Stopwatch variables
 let timer;
 let startTime;
 let elapsedTime = 0;
 let isRunning = false;
 
-// Function to format time as HH:MM:SS
+// Format time as HH:MM:SS
 function formatTime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hours = Math.floor(totalSeconds / 3600);
@@ -41,27 +40,33 @@ function resetStopwatch() {
     document.getElementById('display').textContent = '00:00:00';
 }
 
-// Load the elapsed time from localStorage
-function loadStopwatch() {
+// Initialize the stopwatch
+function initializeStopwatch() {
     const storedElapsedTime = parseInt(localStorage.getItem('elapsedTime'), 10);
     elapsedTime = isNaN(storedElapsedTime) ? 0 : storedElapsedTime;
     document.getElementById('display').textContent = formatTime(elapsedTime);
-}
-
-// Check and reset the stopwatch if needed
-function checkAndReset() {
-    const currentSlide = localStorage.getItem('currentSlide');
-    if (currentSlide === 'start') {
-        resetStopwatch();
-    }
-    loadStopwatch();
-}
-
-// Initialize the stopwatch when the page loads
-window.onload = function() {
-    checkAndReset();
     startStopwatch();
+}
+
+// Reset if the slide is the start slide
+function handleSlideChange(slideName) {
+    if (slideName === 'start') {
+        resetStopwatch();
+    } else if (slideName === 'end') {
+        stopStopwatch();
+    }
+}
+
+// Load and initialize the stopwatch when the page loads
+window.onload = function() {
+    initializeStopwatch();
 };
+
+// Example function to simulate slide change
+function changeSlide(slideName) {
+    handleSlideChange(slideName);
+}
+
 
 // Update current slide in localStorage
 function updateSlideState(slideName) {
