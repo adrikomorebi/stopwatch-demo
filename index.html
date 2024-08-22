@@ -64,20 +64,11 @@
         // Load the elapsed time from localStorage
         elapsedTime = parseInt(localStorage.getItem('elapsedTime'), 10) || 0;
 
-        // Start the stopwatch automatically
+        // Automatically start the stopwatch
         startStopwatch();
 
-        // Listen for messages to control the stopwatch
-        window.addEventListener('message', (event) => {
-            if (event.data === 'stopStopwatch') {
-                stopStopwatch();
-            } else if (event.data === 'resetStopwatch') {
-                resetStopwatch();
-            }
-        });
-    </script>
-</body>
-</html>
+        // Listen for messa
+
 
 
 
