@@ -15,19 +15,12 @@
             margin-bottom: 20px;
         }
         button {
-            font-size: 20px;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
+            display: none; /* Hide buttons */
         }
     </style>
 </head>
 <body>
-    <h1>Stopwatch</h1>
     <div id="display">00:00:00</div>
-    <button onclick="startStopwatch()">Start</button>
-    <button onclick="stopStopwatch()">Stop</button>
-    <button onclick="resetStopwatch()">Reset</button>
     
     <script>
         let timer;
@@ -46,7 +39,6 @@
             if (!isRunning) {
                 isRunning = true;
                 const startTime = Date.now() - elapsedTime;
-
                 timer = setInterval(() => {
                     elapsedTime = Date.now() - startTime;
                     document.getElementById('display').textContent = formatTime(elapsedTime);
@@ -65,7 +57,18 @@
             elapsedTime = 0;
             document.getElementById('display').textContent = '00:00:00';
         }
+
+        // Start the stopwatch automatically
+        startStopwatch();
+
+        // Listen for messages to control the stopwatch
+        window.addEventListener('message', (event) => {
+            if (event.data === 'stopStopwatch') {
+                stopStopwatch();
+            }
+        });
     </script>
 </body>
 </html>
+
 
