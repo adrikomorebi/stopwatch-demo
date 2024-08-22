@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persistent Stopwatch</title>
+    <title>Stopwatch Display</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap');
-
         body {
             font-family: 'Quicksand', sans-serif;
             text-align: center;
             margin-top: 50px;
         }
-
         #display {
             font-size: 30px;
         }
@@ -22,10 +20,9 @@
     <div id="display">00:00:00</div>
 
     <script>
-        let timer;
-        let isRunning = false;
-        let startTime;
         let elapsedTime = localStorage.getItem('elapsedTime') ? parseInt(localStorage.getItem('elapsedTime')) : 0;
+        let isRunning = localStorage.getItem('isRunning') === 'true';
+        let timer;
 
         function formatTime(ms) {
             const totalSeconds = Math.floor(ms / 1000);
@@ -36,39 +33,17 @@
             return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function startStopwatch() {
-            if (!isRunning) {
-                isRunning = true;
-                startTime = Date.now() - elapsedTime;
-                timer = setInterval(() => {
-                    elapsedTime = Date.now() - startTime;
-                    localStorage.setItem('elapsedTime', elapsedTime);
-                    document.getElementById('display').textContent = formatTime(elapsedTime);
-                }, 1000);
-            }
-        }
-
-        function stopStopwatch() {
-            clearInterval(timer);
-            isRunning = false;
-        }
-
-        function resetStopwatch() {
-            clearInterval(timer);
-            isRunning = false;
-            elapsedTime = 0;
-            localStorage.setItem('elapsedTime', 0);
-            document.getElementById('display').textContent = '00:00:00';
-        }
-
-        // Start the stopwatch immediately if already running
-        if (localStorage.getItem('isRunning') === 'true') {
-            startStopwatch();
-        }
-
-        // Call updateDisplay at the start to display the persisted time
+        // Update display with current time
         document.getElementById('display').textContent = formatTime(elapsedTime);
+
+        if (isRunning) {
+            const startTime = Date.now() - elapsedTime;
+            timer = setInterval(() => {
+                elapsedTime = Date.now() - startTime;
+                localStorage.setItem('elapsedTime', elapsedTime);
+                document.getElementById('display').textContent = formatTime(elapsedTime);
+            }, 1000);
+        }
     </script>
 </body>
 </html>
-
