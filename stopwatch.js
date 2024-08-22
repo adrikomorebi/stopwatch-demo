@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (storedElapsedTime) {
             elapsedTime = parseInt(storedElapsedTime, 10);
             startStopwatch();
+        } else {
+            startStopwatch();
         }
     }
 });
@@ -47,6 +49,7 @@ function startStopwatch() {
 function stopStopwatch() {
     clearInterval(timer);
     isRunning = false;
+    localStorage.removeItem('elapsedTime');
 }
 
 function resetStopwatch() {
@@ -61,10 +64,3 @@ function getCurrentSlideId() {
     // Replace with actual method to get the current slide ID or URL
     return window.location.hash.substring(1) || "default-slide-id";
 }
-
-
-// Update current slide in localStorage
-function updateSlideState(slideName) {
-    localStorage.setItem('currentSlide', slideName);
-}
-
