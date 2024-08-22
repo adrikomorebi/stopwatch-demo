@@ -4,85 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stopwatch</title>
-    <style>
-        body {
-            font-family: Quicksand, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        #display {
-            font-size: 30px;
-            margin-bottom: 20px;
-        }
-        button {
-            display: none; /* Hide buttons, only needed for control from Genially */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css"> <!-- If you have CSS for styling -->
 </head>
 <body>
+    <h1>Stopwatch</h1>
     <div id="display">00:00:00</div>
-    
-    <script>
-        let timer;
-        let startTime;
-        let elapsedTime = 0;
-        let isRunning = false;
+    <!-- Buttons for manual control if needed -->
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="stopStopwatch()">Stop</button>
+    <button onclick="resetStopwatch()">Reset</button>
 
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function startStopwatch() {
-            if (!isRunning) {
-                isRunning = true;
-                startTime = Date.now() - elapsedTime;
-                timer = setInterval(() => {
-                    elapsedTime = Date.now() - startTime;
-                    localStorage.setItem('elapsedTime', elapsedTime);
-                    document.getElementById('display').textContent = formatTime(elapsedTime);
-                }, 1000);
-            }
-        }
-
-        function stopStopwatch() {
-            clearInterval(timer);
-            isRunning = false;
-        }
-
-        function resetStopwatch() {
-            clearInterval(timer);
-            isRunning = false;
-            elapsedTime = 0;
-            localStorage.setItem('elapsedTime', elapsedTime);
-            document.getElementById('display').textContent = '00:00:00';
-        }
-
-        // Load the elapsed time from localStorage
-        elapsedTime = parseInt(localStorage.getItem('elapsedTime'), 10) || 0;
-
-        // Automatically start the stopwatch
-        startStopwatch();
-
-        // Listen for messages to control the stopwatch
-        window.addEventListener('message', (event) => {
-            if (event.data === 'stopStopwatch') {
-                stopStopwatch();
-            } else if (event.data === 'resetStopwatch') {
-                resetStopwatch();
-            }
-        });
-
-        // Check for a reset trigger when the page loads
-        if (window.location.hash === '#reset') {
-            resetStopwatch();
-        }
-    </script>
+    <script src="stopwatch.js"></script>
 </body>
 </html>
+
 
 
 
