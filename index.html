@@ -3,28 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stopwatch</title>
+    <title>Slide Stopwatch Game</title>
     <style>
-        body {
-            font-family: Quicksand, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background: #f0f0f0;
+        /* Basic styles for slides */
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
         }
-        #display {
-            font-size: 30px;
-            margin-top: 50px;
-            color: #333;
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .active-slide {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div id="display">00:00:00</div>
 
-    <script src="stopwatch.js"></script>
+<div class="slide-container">
+    <div class="slide" data-slide-number="1">Slide 1</div>
+    <div class="slide" data-slide-number="2">Slide 2</div>
+    <div class="slide active-slide" data-slide-number="3">Slide 3 - Game Starts Here</div>
+    <div class="slide" data-slide-number="4">Slide 4</div>
+    <div class="slide" data-slide-number="5">Slide 5</div>
+    <div class="slide" data-slide-number="6">Slide 6</div>
+    <div class="slide" data-slide-number="7">Slide 7</div>
+    <div class="slide" data-slide-number="8">Slide 8</div>
+    <div class="slide" data-slide-number="9">Slide 9 - Game Ends Here</div>
+</div>
+
+<!-- Stopwatch Display -->
+<div id="stopwatch">Elapsed Time: 0s</div>
+
+<script>
+    // Variables for stopwatch and slides
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+
+    // Elements
+    const stopwatchDisplay = document.getElementById('stopwatch');
+    const slides = document.querySelectorAll('.slide');
+    
+    // Helper Functions
+    function startStopwatch() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
+            stopwatchDisplay.textContent = `Elapsed Time: ${(elapsedTime / 1000).toFixed(1)}s`;
+        }, 100);
+    }
+
+    function stopStopwatch() {
+        clearInterval(timerInterval);
+    }
+
+    function resetStopwatch() {
+        elapsedTime = 0;
+        stopwatchDisplay.textContent = 'Elapsed Time: 0s';
+    }
+
+    // Function to handle slide transitions
+    function updateSlides(newSlideNumber) {
+        slides.forEach(slide => {
+            slide.classList.remove('active-slide');
+        });
+
+        const newSlide = document.querySelector(`[data-slide-number="${newSlideNumber}"]`);
+        if (newSlide) {
+            newSlide.classList.add('active-slide');
+        }
+
+        // Start, stop, or reset stopwatch based on slide number
+        if (newSlideNumber === 3) {
+            resetStopwatch();
+            startStopwatch();
+        } else if (newSlideNumber === 9) {
+            stopStopwatch();
+        } else if (newSlideNumber < 3 || newSlideNumber > 9) {
+            resetStopwatch();
+        }
+    }
+
+    // Simulating navigation between slides
+    let currentSlide = 3; // Start at slide 3
+    updateSlides(currentSlide);
+
+    // Example: Move through slides with a delay (simulating user navigation)
+    const slideNavigation = setInterval(() => {
+        if (currentSlide < 9) {
+            currentSlide++;
+            updateSlides(currentSlide);
+        } else {
+            clearInterval(slideNavigation); // Stop automatic navigation at the end
+        }
+    }, 5000); // Switch slides every 5 seconds
+
+</script>
 </body>
 </html>
+
 
 
 
