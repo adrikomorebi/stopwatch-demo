@@ -1,66 +1,77 @@
-// stopwatch.js
-let timer;
-let isRunning = false;
+let startTime;
 let elapsedTime = 0;
-const START_SLIDE_ID = "start-slide"; // Replace with actual start slide ID or URL
-const END_SLIDE_ID = "end-slide";     // Replace with actual end slide ID or URL
+let stopwatchInterval;
+let gameStarted = false;
+let currentSlide = 1;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const slideId = getCurrentSlideId();
+function startStopwatch() {
+    startTime = Date.now() - elapsedTime; // Start or resume from the elapsed time
+    stopwatchInterval = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        console.log("Elapsed Time: " + (elapsedTime / 1000).toFixed(2) + " seconds");
+    }, 100); // Update every 100ms
+}
 
-    if (slideId === START_SLIDE_ID) {
-        resetStopwatch();
-    } else if (slideId === END_SLIDE_ID) {
-        stopStopwatch();
-    } else {
-        // If not on start or end slide, resume stopwatch if it was running
-        const storedElapsedTime = localStorage.getItem('elapsedTime');
-        if (storedElapsedTime) {
-            elapsedTime = parseInt(storedElapsedTime, 10);
-            startStopwatch();
-        } else {
-            startStopwatch();
+function stopStopwatch() {
+    clearInterval(stopwatchInterval);
+}
+
+function resetStopwatch() {
+    clearInterval(stopwatchInterval);
+    elapsedTime = 0;
+    console.log("Stopwatch reset.");
+}
+
+function checkSlideAndUpdateStopwatch(slideNumber) {
+    // Check if game starts at slide 3
+    if (slideNumber === 3 && !gameStarted) {
+        console.log("Game started at slide 3.");
+        resetStopwatch(); // Reset stopwatch at the start of the game
+        startStopwatch(); // Start the stopwatch
+        gameStarted = true;
+    } 
+    
+    // Stop the game and stopwatch at slide 9
+    if (slideNumber === 9 && gameStarted) {
+        console.log("Game ended at slide 9.");
+        stopStopwatch(); // Stop the stopwatch
+        gameStarted = false; // Reset game state
+    }
+    
+    // If the user goes back to slide 3, reset the game and stopwatch
+    if (slideNumber < 3 && gameStarted) {
+        console.log("User went back before slide 3. Resetting game.");
+        resetStopwatch(); // Reset the stopwatch
+        gameStarted = false; // Reset game state
+    }
+}
+
+// Assume the slides are part of a container element and slide change updates the class or other attribute
+let slideContainer = document.querySelector('.slide-container'); // Adjust this selector to match your DOM
+
+// Observe changes in the slide container to detect when the slide changes
+const observer = new MutationObserver(() => {
+    // Determine the current slide (this assumes there's a way to track it, such as through a class or data attribute)
+    let activeSlide = document.querySelector('.active-slide'); // Adjust selector to match active slide class
+
+    if (activeSlide) {
+        let slideNumber = parseInt(activeSlide.getAttribute('data-slide-number'), 10); // Assuming slides have data-slide-number attribute
+
+        // Update current slide and check if we need to update the stopwatch
+        if (slideNumber !== currentSlide) {
+            currentSlide = slideNumber;
+            checkSlideAndUpdateStopwatch(slideNumber);
         }
     }
 });
 
-function formatTime(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+// Start observing the container for changes
+observer.observe(slideContainer, { childList: true, subtree: true, attributes: true });
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+// Initial check if the user is already on a specific slide
+let initialSlide = document.querySelector('.active-slide');
+if (initialSlide) {
+    currentSlide = parseInt(initialSlide.getAttribute('data-slide-number'), 10);
+    checkSlideAndUpdateStopwatch(currentSlide);
 }
 
-function startStopwatch() {
-    if (!isRunning) {
-        isRunning = true;
-        const startTime = Date.now() - elapsedTime;
-
-        timer = setInterval(() => {
-            elapsedTime = Date.now() - startTime;
-            localStorage.setItem('elapsedTime', elapsedTime);
-            document.getElementById('display').textContent = formatTime(elapsedTime);
-        }, 1000);
-    }
-}
-
-function stopStopwatch() {
-    clearInterval(timer);
-    isRunning = false;
-    localStorage.removeItem('elapsedTime');
-}
-
-function resetStopwatch() {
-    clearInterval(timer);
-    isRunning = false;
-    elapsedTime = 0;
-    document.getElementById('display').textContent = '00:00:00';
-    localStorage.removeItem('elapsedTime');
-}
-
-function getCurrentSlideId() {
-    // Replace with actual method to get the current slide ID or URL
-    return window.location.hash.substring(1) || "default-slide-id";
-}
