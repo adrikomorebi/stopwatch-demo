@@ -67,7 +67,23 @@
         // Automatically start the stopwatch
         startStopwatch();
 
-        // Listen for messa
+        // Listen for messages to control the stopwatch
+        window.addEventListener('message', (event) => {
+            if (event.data === 'stopStopwatch') {
+                stopStopwatch();
+            } else if (event.data === 'resetStopwatch') {
+                resetStopwatch();
+            }
+        });
+
+        // Check for a reset trigger when the page loads
+        if (window.location.hash === '#reset') {
+            resetStopwatch();
+        }
+    </script>
+</body>
+</html>
+
 
 
 
