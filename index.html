@@ -4,19 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stopwatch</title>
-    <link rel="stylesheet" href="style.css"> <!-- If you have CSS for styling -->
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #display {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            display: none; /* Hide buttons if not needed */
+        }
+    </style>
 </head>
 <body>
     <h1>Stopwatch</h1>
     <div id="display">00:00:00</div>
-    <!-- Buttons for manual control if needed -->
-    <button onclick="startStopwatch()">Start</button>
-    <button onclick="stopStopwatch()">Stop</button>
-    <button onclick="resetStopwatch()">Reset</button>
-
     <script src="stopwatch.js"></script>
 </body>
 </html>
+
 
 
 
