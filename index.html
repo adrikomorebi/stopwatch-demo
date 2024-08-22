@@ -60,8 +60,16 @@
 
         // Start the stopwatch automatically
         startStopwatch();
+
+        // Listen for messages to control the stopwatch
+        window.addEventListener('message', (event) => {
+            if (event.data === 'stopStopwatch') {
+                stopStopwatch();
+            }
+        });
     </script>
 </body>
 </html>
+
 
 
