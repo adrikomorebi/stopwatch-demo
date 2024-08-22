@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #display {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="display">00:00:00</div>
+
+    <script>
+        let elapsedTime = 0;
+        let isRunning = false;
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById('display');
+            display.textContent = formatTime(elapsedTime);
+        }
+
+        // Call updateDisplay at the start
+        updateDisplay();
+    </script>
+</body>
+</html>
